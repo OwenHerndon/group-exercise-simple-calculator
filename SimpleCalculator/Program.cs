@@ -13,7 +13,9 @@ namespace SimpleCalculator
         static void Main(string[] args)
         {
             int x = 0;
-            while(true)
+            StoredConstants.StoredConstants constants = new StoredConstants.StoredConstants();
+
+            while (true)
             {
                 Console.WriteLine($"[{x}]>");
                 // increment number of times using program
@@ -22,49 +24,40 @@ namespace SimpleCalculator
                 string input = Console.ReadLine();
                 if (input.ToLower() == "quit" || input.ToLower() == "exit")
                 {
+                    Console.WriteLine("Bye!");
                     break;
                 }
-                /*
-                 Write regex command to test for, (x=3, x "checks for value", x+1,) 
-                 Create new files for when these conditions are met."think of an operations type folder"
-                 Call appropriate file based on user submission. 
-                 Key value pair to store variables.
-                 Convert to work with existing methods.
-                 
-             
-                 */
 
+                // Regex for 1 + 1 or 1+1
                 Regex r1 = new Regex(@"^(\d+)\s*([+-/%*])\s*(\d+)$");
-
-                // Match the input and write results
-                Match match = r1.Match(input);
+                Match match1 = r1.Match(input);
+                // Regex for a = 8 or a=8
                 Regex r2 = new Regex(@"^([a-zA-Z])\s*=\s*(\d*)$");
-                Match match1 = r2.Match(input);
-                if (match1.Success)
-                {
-                    char charEntered = Convert.ToChar(match1.Groups[1].Value);
-                    int valEntered = Convert.ToInt32(match1.Groups[2].Value);
-                    Console.WriteLine($"charEntered={charEntered} valEntered={valEntered}");
-                    StoredConstants.StoredConstants constants = new StoredConstants.StoredConstants();
-                    constants.AddConstantsToDictionary();
-    
-                    if (constants.IsValueInDictionary(charEntered))
-                    {
-                        Console.WriteLine("this already exists");
-                    }
-                    else
-                    {
-                        constants.AddConstantsToDictionary('q', 100);                      
-                        Console.WriteLine("Value added to dictionary");
-                    }
+                Match match2 = r2.Match(input);
+                // Regex for x only
+                Regex r3 = new Regex(@"^([a-zA-Z])$");
+                Match match3 = r3.Match(input);
 
+                // Check for single char a - Z
+                if(match3.Success)
+                {
+                    char charEntered = Convert.ToChar(match3.Groups[1].Value.ToLower());
+                    constants.GetValueFromDictionary(charEntered);
                 }
-
-                if (match.Success)
+                // Check for x = 1 or x=1
+                else if (match2.Success)
                 {
-                    string firstValue = match.Groups[1].Value;
-                    string operatorUsed = match.Groups[2].Value;
-                    string secondValue = match.Groups[3].Value;
+                    char charEntered = Convert.ToChar(match2.Groups[1].Value.ToLower());
+                    int valEntered = Convert.ToInt32(match2.Groups[2].Value);
+                    //Console.WriteLine($"charEntered={charEntered} valEntered={valEntered}");
+                    constants.AddConstantsToDictionary(charEntered, valEntered);
+                }
+                // check for 1 + 2 or 1+2
+                else if (match1.Success)
+                {
+                    string firstValue = match1.Groups[1].Value;
+                    string operatorUsed = match1.Groups[2].Value;
+                    string secondValue = match1.Groups[3].Value;
                     /*
                     Console.WriteLine("First value = {0}", firstValue);
                     Console.WriteLine("Operator =  {0}", operatorUsed);

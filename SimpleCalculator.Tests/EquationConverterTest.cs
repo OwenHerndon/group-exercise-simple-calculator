@@ -40,7 +40,6 @@ namespace SimpleCalculator.Tests
             string expectedResult = "1 + 1";
             string actualResult = equationConverter.LastQuestion("1 + 1");
             Assert.AreEqual(expectedResult, actualResult);
-
         }
     }
 }
