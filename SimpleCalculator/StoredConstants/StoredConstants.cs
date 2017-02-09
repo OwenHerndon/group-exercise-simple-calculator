@@ -44,12 +44,19 @@ namespace SimpleCalculator.StoredConstants
         //        return false;
         //}
 
-        public void GetValueFromDictionary(char key)
+        public int GetValueFromDictionary(char key)
         {
-            if(constantDictionary.ContainsKey(key))
+            if (constantDictionary.ContainsKey(key))
+            {
                 Console.WriteLine($"The Value of {key} is {constantDictionary[key]}");
+                return constantDictionary[key];
+            }
             else
+            {
                 Console.WriteLine("That variable is not defined yet.");
+                return 0;
+            }
+                
         }
     }
 }
