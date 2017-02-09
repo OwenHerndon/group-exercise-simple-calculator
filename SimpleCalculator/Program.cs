@@ -14,6 +14,7 @@ namespace SimpleCalculator
         {
             int x = 0;
             StoredConstants.StoredConstants constants = new StoredConstants.StoredConstants();
+            EquationConverter conversion = new EquationConverter();
 
             while (true)
             {
@@ -27,7 +28,7 @@ namespace SimpleCalculator
                     Console.WriteLine("Bye!");
                     break;
                 }
-
+                
                 // Regex for 1 + 1 or 1+1
                 Regex r1 = new Regex(@"^(\d+)\s*([+-/%*])\s*(\d+)$");
                 Match match1 = r1.Match(input);
@@ -37,9 +38,21 @@ namespace SimpleCalculator
                 // Regex for x only
                 Regex r3 = new Regex(@"^([a-zA-Z])$");
                 Match match3 = r3.Match(input);
+                // Regex for x + 1 or x+1
+                Regex r4 = new Regex(@"^([a-zA-Z])\s*([+-/%*])\s*(\d+)$");
+                Match match4 = r4.Match(input);
+                // Regex for 1 + x or 1+x
+                Regex r5 = new Regex(@"^(\d+)\s*([+-/%*])\s*([a-zA-Z])$");
+                Match match5 = r5.Match(input);
+                // Regex for 1 + 1 or 1+1
+                Regex r6 = new Regex(@"^(last)$");
+                Match match6 = r6.Match(input);
+                // Regex for 1 + 1 or 1+1
+                Regex r7 = new Regex(@"^(lastq)$");
+                Match match7 = r7.Match(input);
 
                 // Check for single char a - Z
-                if(match3.Success)
+                if (match3.Success)
                 {
                     char charEntered = Convert.ToChar(match3.Groups[1].Value.ToLower());
                     constants.GetValueFromDictionary(charEntered);
@@ -63,8 +76,31 @@ namespace SimpleCalculator
                     Console.WriteLine("Operator =  {0}", operatorUsed);
                     Console.WriteLine("Second value =  {0}", secondValue);
                     */
-                    EquationConverter conversion = new EquationConverter();
                     conversion.MathRouter(firstValue, operatorUsed, secondValue);
+                }
+                else if (match4.Success)
+                {
+                    string charEntered = match4.Groups[1].Value;
+                    string operatorUsed = match4.Groups[2].Value;
+                    string valueEntered = match4.Groups[3].Value;
+                    string newDictionaryValue = Convert.ToString(constants.GetValueFromDictionary(Convert.ToChar(match4.Groups[1].Value)));
+                    conversion.MathRouter(newDictionaryValue, operatorUsed, valueEntered);
+                }
+                else if (match5.Success)
+                {
+                    string valueEntered = match5.Groups[1].Value;
+                    string operatorUsed = match5.Groups[2].Value;
+                    string charEntered = match5.Groups[3].Value;
+                    string newDictionaryValue = Convert.ToString(constants.GetValueFromDictionary(Convert.ToChar(match5.Groups[3].Value)));
+                    conversion.MathRouter(valueEntered, operatorUsed, newDictionaryValue);
+                }
+                else if (match6.Success)
+                {
+                    conversion.LastAnswer();
+                }
+                else if (match7.Success)
+                {
+                    conversion.LastQuestion();
                 }
                 else
                 {
@@ -74,5 +110,5 @@ namespace SimpleCalculator
         }
     }
 }
-
+ 
 
